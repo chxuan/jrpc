@@ -9,13 +9,15 @@ public class JRpcServerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JRpcServerTest.class);
 
     public static void main(String[] args) {
-        LOGGER.info("JRpcServerTest");
-
         TcpServer tcpServer = new TcpServer(1);
-        tcpServer.run("127.0.0.1", 9999);
+        if (tcpServer.run("127.0.0.1", 9999)) {
+            LOGGER.info("服务启动成功...");
+        } else {
+            LOGGER.info("服务启动失败");
+        }
 
         try {
-            Thread.sleep(60 * 1000);
+            Thread.sleep(Integer.MAX_VALUE);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

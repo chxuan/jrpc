@@ -3,17 +3,24 @@ package pers.chxuan.jrpc.net;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pers.chxuan.jrpc.codec.NetworkMessageDecoder;
+import pers.chxuan.jrpc.codec.NetworkMessageEncoder;
+
+import java.util.concurrent.CountDownLatch;
 
 public class TcpClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpClient.class);
 
-    private EventLoopGroup workerGroup = new NioEventLoopGroup();
-
     private Bootstrap bootstrap;
+
+    private CountDownLatch countDownLatch;
+
+    private TcpConnection connection;
 
     private String ip;
 
@@ -23,16 +30,43 @@ public class TcpClient {
         this.ip = ip;
         this.port = port;
 
+        initEnv();
+        return doConnect();
+    }
+
+    protected void connectSuccessCallback() {
+        countDownLatch.countDown();
+    }
+
+    protected void disconnectCallback() {
+        doConnect();
+    }
+
+    private void initEnv() {
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
         bootstrap = new Bootstrap();
         bootstrap.group(workerGroup);
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-        bootstrap.handler(new CustomChannelInitializer());
 
+        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel socketChannel) throws Exception {
+                socketChannel.pipeline().addLast(new NetworkMessageEncoder());
+                socketChannel.pipeline().addLast(new NetworkMessageDecoder());
+                socketChannel.pipeline().addLast(createTcpClientConnection());
+            }
+        });
+    }
+
+    private boolean doConnect() {
         try {
             ChannelFuture channelFuture = bootstrap.connect(ip, port).sync();
             if (channelFuture.isSuccess()) {
-                LOGGER.info("连接服务成功,ip:{},port:{}", ip, port);
+                countDownLatch.await();
+                LOGGER.info("连接服务成功,socketKey:{}", connection.getSocketKey());
+
                 return true;
             }
         } catch (Exception e) {
@@ -42,11 +76,9 @@ public class TcpClient {
         return false;
     }
 
-    public void close() {
-        try {
-            workerGroup.shutdownGracefully().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private TcpConnection createTcpClientConnection() {
+        countDownLatch = new CountDownLatch(1);
+        connection = new TcpClientConnection(this);
+        return connection;
     }
 }

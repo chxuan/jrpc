@@ -2,25 +2,28 @@ package pers.chxuan.jrpc.net;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 public class TcpConnection extends ChannelInboundHandlerAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TcpConnection.class);
+    protected ChannelHandlerContext ctx;
 
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("连接成功");
+    private String socketKey = "";
+
+    protected String getSocketKey() {
+        if (socketKey.isEmpty()) {
+            if (ctx != null) {
+                socketKey = getAddress(ctx.channel().localAddress()) + "_" + getAddress(ctx.channel().remoteAddress());
+            }
+        }
+
+        return socketKey;
     }
 
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("断开连接");
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("收到数据");
+    protected String getAddress(SocketAddress address) {
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) address;
+        return inetSocketAddress.getHostString() + ":" + inetSocketAddress.getPort();
     }
 }
