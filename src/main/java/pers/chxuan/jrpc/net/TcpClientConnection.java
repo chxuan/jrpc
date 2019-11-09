@@ -10,6 +10,8 @@ public class TcpClientConnection extends TcpConnection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpClientConnection.class);
 
+    private static final int RECONNECT_SECONDS = 3;
+
     private TcpClient tcpClient;
 
     public TcpClientConnection(TcpClient tcpClient) {
@@ -37,7 +39,7 @@ public class TcpClientConnection extends TcpConnection {
             public void run() {
                 tcpClient.disconnectCallback();
             }
-        }, 3, TimeUnit.SECONDS);
+        }, RECONNECT_SECONDS, TimeUnit.SECONDS);
 
         ctx.close();
     }
