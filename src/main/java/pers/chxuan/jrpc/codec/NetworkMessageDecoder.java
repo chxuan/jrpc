@@ -2,20 +2,23 @@ package pers.chxuan.jrpc.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import pers.chxuan.jrpc.entity.NetworkMessage;
 
-import java.util.List;
+public class NetworkMessageDecoder extends LengthFieldBasedFrameDecoder {
 
-public class NetworkMessageDecoder extends ByteToMessageDecoder {
+    public NetworkMessageDecoder() {
+        super(50 * 1024 * 1024,
+                0,
+                4,
+                -4,
+                0);
+    }
 
     @Override
-    protected void decode(ChannelHandlerContext context,
-                          ByteBuf in,
-                          List<Object> out) throws Exception {
-
+    protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
         NetworkMessage message = new NetworkMessage();
 
         message.setTotalLength(in.readInt());
@@ -35,6 +38,6 @@ public class NetworkMessageDecoder extends ByteToMessageDecoder {
             message.setContent(content);
         }
 
-        out.add(message);
+        return message;
     }
 }

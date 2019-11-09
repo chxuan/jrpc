@@ -29,6 +29,7 @@ public class TcpServer {
         bootstrap.option(ChannelOption.SO_REUSEADDR, true);
         bootstrap.option(ChannelOption.SO_BACKLOG, 128);
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+        bootstrap.childHandler(new CustomChannelInitializer());
 
         try {
             bootstrap.bind().sync();

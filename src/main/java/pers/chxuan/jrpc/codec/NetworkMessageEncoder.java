@@ -10,7 +10,7 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<NetworkMessage> 
     private static final int FIXED_LENGHT = 4 + 4 + 4 + 4;
 
     @Override
-    protected void encode(ChannelHandlerContext context,
+    protected void encode(ChannelHandlerContext ctx,
                           NetworkMessage in,
                           ByteBuf out) throws Exception {
 
