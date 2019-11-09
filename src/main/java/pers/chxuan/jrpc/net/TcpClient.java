@@ -3,12 +3,9 @@ package pers.chxuan.jrpc.net;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pers.chxuan.jrpc.codec.NetworkMessageDecoder;
-import pers.chxuan.jrpc.codec.NetworkMessageEncoder;
 
 public class TcpClient {
 
@@ -35,11 +32,11 @@ public class TcpClient {
         try {
             ChannelFuture channelFuture = bootstrap.connect(ip, port).sync();
             if (channelFuture.isSuccess()) {
-                System.out.println("连接成功");
+                LOGGER.info("连接服务成功,ip:{},port:{}", ip, port);
                 return true;
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.info("连接服务失败,ip:{},port:{},exception:{}", ip, port, e.getMessage());
         }
 
         return false;
