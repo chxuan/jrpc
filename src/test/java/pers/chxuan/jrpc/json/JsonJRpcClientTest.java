@@ -11,13 +11,13 @@ public class JsonJRpcClientTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonJRpcClientTest.class);
 
     public static void main(String[] args) {
-        JRpcClientPool rpcClient = new JRpcClientPool("127.0.0.1", 9999, new JsonMessageSerialize());
+        JRpcClientPool rpcClientPool = new JRpcClientPool("127.0.0.1", 9999, new JsonMessageSerialize());
 
         RequestLogin message = new RequestLogin();
         message.setUsername("chxuan");
         message.setPassword("123456");
 
-        RequestLogin resp = (RequestLogin) rpcClient.send(message);
+        RequestLogin resp = (RequestLogin) rpcClientPool.send(message);
         if (resp != null) {
             LOGGER.info("返回消息:{}", resp);
         } else {
