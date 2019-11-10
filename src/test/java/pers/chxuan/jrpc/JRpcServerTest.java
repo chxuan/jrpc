@@ -2,7 +2,7 @@ package pers.chxuan.jrpc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pers.chxuan.jrpc.net.TcpServer;
+import pers.chxuan.jrpc.tcp.TcpServer;
 
 public class JRpcServerTest {
 

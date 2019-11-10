@@ -1,4 +1,4 @@
-package pers.chxuan.jrpc.net;
+package pers.chxuan.jrpc.tcp;
 
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;

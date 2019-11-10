@@ -1,4 +1,4 @@
-package pers.chxuan.jrpc.net;
+package pers.chxuan.jrpc.tcp;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;

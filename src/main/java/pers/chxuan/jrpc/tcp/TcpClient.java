@@ -1,4 +1,4 @@
-package pers.chxuan.jrpc.net;
+package pers.chxuan.jrpc.tcp;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
