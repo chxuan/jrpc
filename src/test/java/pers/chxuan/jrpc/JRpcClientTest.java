@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.chxuan.jrpc.entity.NetworkMessage;
 import pers.chxuan.jrpc.net.TcpClient;
+import pers.chxuan.jrpc.rpc.JRpcClient;
 
 public class JRpcClientTest {
 
@@ -12,7 +13,7 @@ public class JRpcClientTest {
     private static final int FIXED_LENGHT = 4 + 4 + 4 + 4;
 
     public static void main(String[] args) {
-        TcpClient tcpClient = new TcpClient();
+        JRpcClient tcpClient = new JRpcClient();
 
         if (tcpClient.connect("127.0.0.1", 9999)) {
             LOGGER.info("连接成功");

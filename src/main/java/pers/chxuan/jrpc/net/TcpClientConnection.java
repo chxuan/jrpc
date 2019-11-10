@@ -74,6 +74,6 @@ public class TcpClientConnection extends TcpConnection {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         NetworkMessage message = (NetworkMessage) msg;
-        LOGGER.info("收到服务端消息回复,message:{}", message.getMessageClassName());
+        tcpClient.receivedNetworkMessageCallBack(message);
     }
 }

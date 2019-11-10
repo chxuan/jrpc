@@ -14,7 +14,7 @@ import pers.chxuan.jrpc.entity.NetworkMessage;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TcpClient {
+public abstract class TcpClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpClient.class);
 
@@ -38,7 +38,7 @@ public class TcpClient {
         return doConnect();
     }
 
-    public boolean send(NetworkMessage message) {
+    protected boolean send(NetworkMessage message) {
         if (isConnectSuccess.get()) {
             return connection.send(message);
         }
@@ -53,6 +53,8 @@ public class TcpClient {
     protected void disconnectCallback() {
         doConnect();
     }
+
+    protected abstract void receivedNetworkMessageCallBack(NetworkMessage message);
 
     private void initEnv() {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
