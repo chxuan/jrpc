@@ -24,16 +24,18 @@ public abstract class TcpClient {
 
     private TcpConnection connection;
 
-    private AtomicBoolean isConnectSuccess = new AtomicBoolean();
-
     private String ip;
 
     private int port;
 
-    public boolean connect(String ip, int port) {
+    protected AtomicBoolean isConnectSuccess = new AtomicBoolean(false);
+
+    public TcpClient(String ip, int port) {
         this.ip = ip;
         this.port = port;
+    }
 
+    protected boolean connect() {
         initEnv();
         return doConnect();
     }

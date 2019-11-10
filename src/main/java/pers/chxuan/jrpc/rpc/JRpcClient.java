@@ -19,22 +19,24 @@ public class JRpcClient extends TcpClient {
 
     private Map<Integer, JRpcFuture> futureMap = new ConcurrentHashMap<>();
 
-    public JRpcClient(MessageSerialize messageSerialize) {
+    private static final int DEFAULT_SEND_TIMEOUT = 60;
+
+    public JRpcClient(String ip, int port, MessageSerialize messageSerialize) {
+        super(ip, port);
         this.messageSerialize = messageSerialize;
     }
 
-    public synchronized Object send(Object object) {
-        NetworkMessage message = NetworkMessageUtils.toNetworkMessage(messageSerialize, object);
-        if (message != null) {
-            JRpcFuture future = new JRpcFuture();
-            futureMap.put(message.getSerial(), future);
+    public Object send(Object object) {
+        return send(object, DEFAULT_SEND_TIMEOUT, TimeUnit.SECONDS);
+    }
 
-            if (super.send(message)) {
-                future.await(60, TimeUnit.SECONDS);
+    public synchronized Object send(Object object, long timeout, TimeUnit unit) {
+        if (super.isConnectSuccess.get()) {
+            return doSend(object, timeout, unit);
+        } else {
+            if (super.connect()) {
+                return doSend(object, timeout, unit);
             }
-
-            futureMap.remove(message.getSerial());
-            return future.getObject();
         }
 
         return null;
@@ -49,5 +51,22 @@ public class JRpcClient extends TcpClient {
         } else {
             LOGGER.info("收到服务端消息回复,没有找到JRpcFuture,name:{}", message.getName());
         }
+    }
+
+    private Object doSend(Object object, long timeout, TimeUnit unit) {
+        NetworkMessage message = NetworkMessageUtils.toNetworkMessage(messageSerialize, object);
+        if (message != null) {
+            JRpcFuture future = new JRpcFuture();
+            futureMap.put(message.getSerial(), future);
+
+            if (super.send(message)) {
+                future.await(timeout, unit);
+            }
+
+            futureMap.remove(message.getSerial());
+            return future.getObject();
+        }
+
+        return null;
     }
 }

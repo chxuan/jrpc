@@ -11,21 +11,17 @@ public class ProtoJRpcClientTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProtoJRpcClientTest.class);
 
     public static void main(String[] args) {
-        JRpcClient rpcClient = new JRpcClient(new ProtoBufferMessageSerialize());
+        JRpcClient rpcClient = new JRpcClient("127.0.0.1", 9999, new ProtoBufferMessageSerialize());
 
-        if (rpcClient.connect("127.0.0.1", 9999)) {
-            TestProto.RequestLogin.Builder builder = TestProto.RequestLogin.newBuilder();
-            builder.setUsername("chxuan");
-            builder.setPassword("123456");
+        TestProto.RequestLogin.Builder builder = TestProto.RequestLogin.newBuilder();
+        builder.setUsername("chxuan");
+        builder.setPassword("123456");
 
-            TestProto.RequestLogin resp = (TestProto.RequestLogin) rpcClient.send(builder.build());
-            if (resp != null) {
-                System.out.println(resp);
-            } else {
-                System.out.println("返回消息为空");
-            }
+        TestProto.RequestLogin resp = (TestProto.RequestLogin) rpcClient.send(builder.build());
+        if (resp != null) {
+            LOGGER.info("返回消息:{}", resp);
         } else {
-            LOGGER.info("连接失败");
+            LOGGER.info("返回消息为空");
         }
 
         try {
