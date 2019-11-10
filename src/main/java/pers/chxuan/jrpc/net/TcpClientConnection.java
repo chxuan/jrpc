@@ -26,9 +26,9 @@ public class TcpClientConnection extends TcpConnection {
             ChannelFuture future = super.ctx.writeAndFlush(message);
             future.addListener((ChannelFuture channelFuture) -> {
                 if (channelFuture.isSuccess()) {
-                    LOGGER.info("发送消息成功,socketKey:{},message:{}", super.getSocketKey(), message.getMessageClassName());
+                    LOGGER.info("发送消息成功,socketKey:{},message:{}", super.getSocketKey(), message.getName());
                 } else {
-                    LOGGER.info("发送消息失败,socketKey:{},message:{}", super.getSocketKey(), message.getMessageClassName());
+                    LOGGER.info("发送消息失败,socketKey:{},message:{}", super.getSocketKey(), message.getName());
                     channelFuture.channel().close();
                 }
             });

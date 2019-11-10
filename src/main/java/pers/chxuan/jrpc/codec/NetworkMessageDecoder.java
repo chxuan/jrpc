@@ -24,10 +24,10 @@ public class NetworkMessageDecoder extends LengthFieldBasedFrameDecoder {
         message.setTotalLength(in.readInt());
         message.setSerial(in.readInt());
 
-        message.setMessageClassNameLength(in.readInt());
-        if (message.getMessageClassNameLength() > 0) {
-            ByteBuf byteBuf = in.readBytes(message.getMessageClassNameLength());
-            message.setMessageClassName(byteBuf.toString(CharsetUtil.UTF_8));
+        message.setNameLength(in.readInt());
+        if (message.getNameLength() > 0) {
+            ByteBuf byteBuf = in.readBytes(message.getNameLength());
+            message.setName(byteBuf.toString(CharsetUtil.UTF_8));
             ReferenceCountUtil.release(byteBuf);
         }
 

@@ -6,9 +6,9 @@ public class NetworkMessage {
 
     private int serial = 0;
 
-    private int messageClassNameLength = 0;
+    private int nameLength = 0;
 
-    private String messageClassName;
+    private String name;
 
     private int contentLength = 0;
 
@@ -30,20 +30,20 @@ public class NetworkMessage {
         this.serial = serial;
     }
 
-    public int getMessageClassNameLength() {
-        return messageClassNameLength;
+    public int getNameLength() {
+        return nameLength;
     }
 
-    public void setMessageClassNameLength(int messageClassNameLength) {
-        this.messageClassNameLength = messageClassNameLength;
+    public void setNameLength(int nameLength) {
+        this.nameLength = nameLength;
     }
 
-    public String getMessageClassName() {
-        return messageClassName;
+    public String getName() {
+        return name;
     }
 
-    public void setMessageClassName(String messageClassName) {
-        this.messageClassName = messageClassName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getContentLength() {

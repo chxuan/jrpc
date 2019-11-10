@@ -7,8 +7,6 @@ import pers.chxuan.jrpc.entity.NetworkMessage;
 
 public class NetworkMessageEncoder extends MessageToByteEncoder<NetworkMessage> {
 
-//    private static final int FIXED_LENGHT = 4 + 4 + 4 + 4;
-
     @Override
     protected void encode(ChannelHandlerContext ctx,
                           NetworkMessage in,
@@ -17,9 +15,9 @@ public class NetworkMessageEncoder extends MessageToByteEncoder<NetworkMessage> 
         out.writeInt(in.getTotalLength());
         out.writeInt(in.getSerial());
 
-        out.writeInt(in.getMessageClassNameLength());
-        if (in.getMessageClassNameLength() > 0) {
-            out.writeBytes(in.getMessageClassName().getBytes());
+        out.writeInt(in.getNameLength());
+        if (in.getNameLength() > 0) {
+            out.writeBytes(in.getName().getBytes());
         }
 
         out.writeInt(in.getContentLength());

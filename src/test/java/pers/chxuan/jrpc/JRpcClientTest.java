@@ -1,36 +1,28 @@
 package pers.chxuan.jrpc;
 
+import com.google.protobuf.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.chxuan.jrpc.entity.NetworkMessage;
-import pers.chxuan.jrpc.net.TcpClient;
+import pers.chxuan.jrpc.protobuf.java.TestProto;
 import pers.chxuan.jrpc.rpc.JRpcClient;
 
 public class JRpcClientTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JRpcClientTest.class);
 
-    private static final int FIXED_LENGHT = 4 + 4 + 4 + 4;
-
     public static void main(String[] args) {
-        JRpcClient tcpClient = new JRpcClient();
+        JRpcClient rpcClient = new JRpcClient(new ProtoBufferMessageSerialize());
 
-        if (tcpClient.connect("127.0.0.1", 9999)) {
+        if (rpcClient.connect("127.0.0.1", 9999)) {
             LOGGER.info("连接成功");
 
-            NetworkMessage message = new NetworkMessage();
-            message.setMessageClassName("RequestLogin");
-            message.setContent("hello world".getBytes());
-            message.setMessageClassNameLength(message.getMessageClassName().length());
-            message.setContentLength(message.getContent().length);
+            TestProto.RequestLogin.Builder builder = TestProto.RequestLogin.newBuilder();
 
-            int totalLenght = FIXED_LENGHT
-                    + message.getMessageClassNameLength()
-                    + message.getContentLength();
+            builder.setUsername("chxuan");
+            builder.setPassword("123456");
 
-            message.setTotalLength(totalLenght);
-
-            tcpClient.send(message);
+            rpcClient.send(builder.build());
         } else {
             LOGGER.info("连接失败");
         }
