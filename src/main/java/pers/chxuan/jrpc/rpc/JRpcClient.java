@@ -30,7 +30,7 @@ public class JRpcClient extends TcpClient {
         futureMap.put(message.getSerial(), future);
 
         if (super.send(message)) {
-            future.await(2, TimeUnit.SECONDS);
+            future.await(60, TimeUnit.SECONDS);
         }
 
         futureMap.remove(message.getSerial());
