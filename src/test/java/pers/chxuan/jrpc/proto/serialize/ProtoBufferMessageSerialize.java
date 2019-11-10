@@ -1,4 +1,4 @@
-package pers.chxuan.jrpc;
+package pers.chxuan.jrpc.proto.serialize;
 
 import com.google.protobuf.Message;
 import pers.chxuan.jrpc.serialize.MessageSerialize;

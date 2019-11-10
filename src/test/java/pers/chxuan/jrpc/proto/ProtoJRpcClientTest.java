@@ -1,15 +1,14 @@
-package pers.chxuan.jrpc;
+package pers.chxuan.jrpc.proto;
 
-import com.google.protobuf.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pers.chxuan.jrpc.entity.NetworkMessage;
-import pers.chxuan.jrpc.protobuf.java.TestProto;
+import pers.chxuan.jrpc.proto.protobuf.java.TestProto;
+import pers.chxuan.jrpc.proto.serialize.ProtoBufferMessageSerialize;
 import pers.chxuan.jrpc.rpc.JRpcClient;
 
-public class JRpcClientTest {
+public class ProtoJRpcClientTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JRpcClientTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProtoJRpcClientTest.class);
 
     public static void main(String[] args) {
         JRpcClient rpcClient = new JRpcClient(new ProtoBufferMessageSerialize());

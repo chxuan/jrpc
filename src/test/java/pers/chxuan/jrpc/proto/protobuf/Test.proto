@@ -1,7 +1,7 @@
 syntax = "proto2";
-package pers.chxuan.jrpc.protobuf;
+package pers.chxuan.jrpc.proto.protobuf;
 
-option java_package = "pers.chxuan.jrpc.protobuf.java";
+option java_package = "pers.chxuan.jrpc.proto.protobuf.java";
 option java_outer_classname = "TestProto";
 
 message RequestLogin {

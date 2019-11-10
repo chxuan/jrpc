@@ -16,23 +16,28 @@ public class NetworkMessageUtils {
     private static final AtomicInteger serial = new AtomicInteger(0);
 
     public static NetworkMessage toNetworkMessage(MessageSerialize messageSerialize, Object object) {
-        NetworkMessage message = new NetworkMessage();
+        try {
+            NetworkMessage message = new NetworkMessage();
 
-        message.setSerial(serial.getAndIncrement());
+            message.setSerial(serial.getAndIncrement());
 
-        String name = object.getClass().getName();
-        byte[] content = messageSerialize.serialize(object);
+            String name = object.getClass().getName();
+            message.setNameLength(name.length());
+            message.setName(name);
 
-        message.setNameLength(name.length());
-        message.setName(name);
+            byte[] content = messageSerialize.serialize(object);
+            message.setContentLength(content.length);
+            message.setContent(content);
 
-        message.setContentLength(content.length);
-        message.setContent(content);
+            int totalLenght = FIXED_LENGHT + name.length() + content.length;
+            message.setTotalLength(totalLenght);
 
-        int totalLenght = FIXED_LENGHT + name.length() + content.length;
-        message.setTotalLength(totalLenght);
+            return message;
+        } catch (Exception e) {
+            LOGGER.info("序列化消息失败,name:{},exception:{}", object.getClass().getName(), e.getMessage());
+        }
 
-        return message;
+        return null;
     }
 
     public static Object toUserObject(MessageSerialize messageSerialize, NetworkMessage message) {

@@ -24,18 +24,20 @@ public class JRpcClient extends TcpClient {
     }
 
     public synchronized Object send(Object object) {
-        JRpcFuture future = new JRpcFuture();
         NetworkMessage message = NetworkMessageUtils.toNetworkMessage(messageSerialize, object);
+        if (message != null) {
+            JRpcFuture future = new JRpcFuture();
+            futureMap.put(message.getSerial(), future);
 
-        futureMap.put(message.getSerial(), future);
+            if (super.send(message)) {
+                future.await(60, TimeUnit.SECONDS);
+            }
 
-        if (super.send(message)) {
-            future.await(60, TimeUnit.SECONDS);
+            futureMap.remove(message.getSerial());
+            return future.getObject();
         }
 
-        futureMap.remove(message.getSerial());
-
-        return future.getObject();
+        return null;
     }
 
     @Override
