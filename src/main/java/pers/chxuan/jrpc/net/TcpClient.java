@@ -12,7 +12,7 @@ import pers.chxuan.jrpc.codec.NetworkMessageEncoder;
 import pers.chxuan.jrpc.entity.NetworkMessage;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class TcpClient {
 
@@ -28,7 +28,7 @@ public abstract class TcpClient {
 
     private int port;
 
-    protected AtomicBoolean isConnectSuccess = new AtomicBoolean(false);
+    protected AtomicInteger connectStatus = new AtomicInteger(TcpConnectStatus.NOT_CONNECT);
 
     public TcpClient(String ip, int port) {
         this.ip = ip;
@@ -41,7 +41,7 @@ public abstract class TcpClient {
     }
 
     protected boolean send(NetworkMessage message) {
-        if (isConnectSuccess.get()) {
+        if (connectStatus.get() == TcpConnectStatus.CONNECTED) {
             return connection.send(message);
         }
 
@@ -77,13 +77,13 @@ public abstract class TcpClient {
     }
 
     private boolean doConnect() {
-        isConnectSuccess.set(false);
+        connectStatus.set(TcpConnectStatus.CONNECTING);
 
         try {
             ChannelFuture channelFuture = bootstrap.connect(ip, port).sync();
             if (channelFuture.isSuccess()) {
                 countDownLatch.await();
-                isConnectSuccess.set(true);
+                connectStatus.set(TcpConnectStatus.CONNECTED);
                 LOGGER.info("连接服务成功,socketKey:{}", connection.getSocketKey());
 
                 return true;

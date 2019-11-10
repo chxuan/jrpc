@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pers.chxuan.jrpc.entity.NetworkMessage;
 import pers.chxuan.jrpc.net.TcpClient;
+import pers.chxuan.jrpc.net.TcpConnectStatus;
 import pers.chxuan.jrpc.serialize.MessageSerialize;
 import pers.chxuan.jrpc.utils.NetworkMessageUtils;
 
@@ -31,9 +32,11 @@ public class JRpcClient extends TcpClient {
     }
 
     public synchronized Object send(Object object, long timeout, TimeUnit unit) {
-        if (super.isConnectSuccess.get()) {
+        int connectStatus = super.connectStatus.get();
+
+        if (connectStatus == TcpConnectStatus.CONNECTED) {
             return doSend(object, timeout, unit);
-        } else {
+        } else if (connectStatus == TcpConnectStatus.NOT_CONNECT){
             if (super.connect()) {
                 return doSend(object, timeout, unit);
             }
