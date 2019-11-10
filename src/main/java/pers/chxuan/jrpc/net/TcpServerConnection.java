@@ -3,6 +3,7 @@ package pers.chxuan.jrpc.net;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pers.chxuan.jrpc.entity.NetworkMessage;
 
 public class TcpServerConnection extends TcpConnection {
 
@@ -20,6 +21,7 @@ public class TcpServerConnection extends TcpConnection {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        super.channelRead(ctx, msg);
+        NetworkMessage message = (NetworkMessage) msg;
+        LOGGER.info("接收到客户端消息,message:{}", new String(message.getContent()));
     }
 }

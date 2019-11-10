@@ -1,8 +1,10 @@
 package pers.chxuan.jrpc.net;
 
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pers.chxuan.jrpc.entity.NetworkMessage;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,12 +12,31 @@ public class TcpClientConnection extends TcpConnection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TcpClientConnection.class);
 
-    private static final int RECONNECT_SECONDS = 3;
+    private static final int RECONNECT_INTERVAL = 3;
 
     private TcpClient tcpClient;
 
     public TcpClientConnection(TcpClient tcpClient) {
         this.tcpClient = tcpClient;
+    }
+
+    @Override
+    public boolean send(NetworkMessage message) {
+        if (super.ctx.channel().isActive()) {
+            ChannelFuture future = super.ctx.writeAndFlush(message);
+            future.addListener((ChannelFuture channelFuture) -> {
+                if (channelFuture.isSuccess()) {
+                    LOGGER.info("发送消息成功,socketKey:{},message:{}", super.getSocketKey(), message.getMessageClassName());
+                } else {
+                    LOGGER.info("发送消息失败,socketKey:{},message:{}", super.getSocketKey(), message.getMessageClassName());
+                    channelFuture.channel().close();
+                }
+            });
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -39,7 +60,7 @@ public class TcpClientConnection extends TcpConnection {
             public void run() {
                 tcpClient.disconnectCallback();
             }
-        }, RECONNECT_SECONDS, TimeUnit.SECONDS);
+        }, RECONNECT_INTERVAL, TimeUnit.SECONDS);
 
         ctx.close();
     }
@@ -52,6 +73,7 @@ public class TcpClientConnection extends TcpConnection {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        super.channelRead(ctx, msg);
+        NetworkMessage message = (NetworkMessage) msg;
+        LOGGER.info("收到服务端消息回复,message:{}", message.getMessageClassName());
     }
 }
