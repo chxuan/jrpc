@@ -1,8 +1,8 @@
 package pers.chxuan.jrpc;
 
 import com.google.protobuf.Message;
-import pers.chxuan.jrpc.java.entity.RequestLogin;
 import pers.chxuan.jrpc.java.serialize.JavaMessageSerialize;
+import pers.chxuan.jrpc.json.serialize.JsonMessageSerialize;
 import pers.chxuan.jrpc.proto.serialize.ProtoBufferMessageSerialize;
 import pers.chxuan.jrpc.proto.protobuf.java.TestProto;
 import pers.chxuan.jrpc.serialize.MessageSerialize;
@@ -12,6 +12,7 @@ public class SerializeTest {
     public static void main(String[] args) throws Exception {
         protobufSerializeTest();
         javaSerializeTest();
+        jsonSerializeTest();
     }
 
     private static void protobufSerializeTest() throws Exception {
@@ -35,7 +36,7 @@ public class SerializeTest {
     private static void javaSerializeTest() throws Exception {
         System.out.println("===============java序列化测试============");
 
-        RequestLogin message = new RequestLogin();
+        pers.chxuan.jrpc.java.entity.RequestLogin message = new pers.chxuan.jrpc.java.entity.RequestLogin();
 
         message.setUsername("chxuan");
         message.setPassword("123456");
@@ -43,8 +44,25 @@ public class SerializeTest {
 
         MessageSerialize messageSerialize = new JavaMessageSerialize();
         byte[] bytes = messageSerialize.serialize(message);
-        RequestLogin msg = (RequestLogin) messageSerialize.unserialize(null, bytes);
+        pers.chxuan.jrpc.java.entity.RequestLogin msg = (pers.chxuan.jrpc.java.entity.RequestLogin) messageSerialize.unserialize(null, bytes);
 
+        System.out.println(msg + "\n");
+    }
+
+    private static void jsonSerializeTest() throws Exception {
+        System.out.println("===============json序列化测试============");
+
+        pers.chxuan.jrpc.json.entity.RequestLogin message = new pers.chxuan.jrpc.json.entity.RequestLogin();
+
+        message.setUsername("chxuan");
+        message.setPassword("123456");
+        System.out.println(message);
+
+        MessageSerialize messageSerialize = new JsonMessageSerialize();
+        byte[] bytes = messageSerialize.serialize(message);
+        System.out.println(new String(bytes));
+
+        pers.chxuan.jrpc.json.entity.RequestLogin msg = (pers.chxuan.jrpc.json.entity.RequestLogin) messageSerialize.unserialize(message.getClass().getName(), bytes);
         System.out.println(msg);
     }
 }
