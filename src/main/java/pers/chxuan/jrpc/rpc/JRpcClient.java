@@ -43,7 +43,7 @@ public class JRpcClient extends TcpClient {
         JRpcFuture future = futureMap.get(message.getSerial());
         if (future != null) {
             future.setObject(NetworkMessageUtils.toUserObject(messageSerialize, message));
-            future.notif();
+            future.countDown();
         } else {
             LOGGER.info("收到服务端消息回复,没有找到JRpcFuture,name:{}", message.getName());
         }

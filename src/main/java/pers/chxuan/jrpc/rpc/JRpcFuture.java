@@ -17,7 +17,7 @@ public class JRpcFuture {
         }
     }
 
-    public void notif() {
+    public void countDown() {
         countDownLatch.countDown();
     }
 
