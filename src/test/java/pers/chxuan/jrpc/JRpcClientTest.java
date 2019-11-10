@@ -15,14 +15,16 @@ public class JRpcClientTest {
         JRpcClient rpcClient = new JRpcClient(new ProtoBufferMessageSerialize());
 
         if (rpcClient.connect("127.0.0.1", 9999)) {
-            LOGGER.info("连接成功");
-
             TestProto.RequestLogin.Builder builder = TestProto.RequestLogin.newBuilder();
-
             builder.setUsername("chxuan");
             builder.setPassword("123456");
 
-            rpcClient.send(builder.build());
+            TestProto.RequestLogin resp = (TestProto.RequestLogin) rpcClient.send(builder.build());
+            if (resp != null) {
+                System.out.println(resp);
+            } else {
+                System.out.println("返回消息为空");
+            }
         } else {
             LOGGER.info("连接失败");
         }

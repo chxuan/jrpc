@@ -21,8 +21,10 @@ public class TcpServerConnection extends TcpConnection {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+//        Thread.sleep(5000);
+
         NetworkMessage message = (NetworkMessage) msg;
-        LOGGER.info("接收到客户端消息,message:{}", new String(message.getContent()));
+        LOGGER.info("接收到客户端消息,name:{}", message.getName());
 
         ctx.writeAndFlush(message);
     }
