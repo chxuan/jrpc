@@ -1,0 +1,14 @@
+syntax = "proto2";
+package pers.chxuan.jrpc.protobuf;
+
+option java_package = "pers.chxuan.jrpc.protobuf.java";
+option java_outer_classname = "TestProto";
+
+message RequestLogin {
+    required string username = 1;
+    required string password = 2;
+}
+
+message ResponseLogin {
+    optional int32 user_id = 1;
+}
