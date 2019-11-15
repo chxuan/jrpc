@@ -30,7 +30,7 @@ public class JRpcClientPool {
         return rpcPool.get().send(object);
     }
 
-    public Object send(Object object, long timeout, TimeUnit unit) {
-        return rpcPool.get().send(object, timeout, unit);
+    public Object send(Object object, long timeout) {
+        return rpcPool.get().send(object, timeout);
     }
 }

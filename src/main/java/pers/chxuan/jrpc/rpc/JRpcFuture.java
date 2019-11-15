@@ -1,24 +1,19 @@
 package pers.chxuan.jrpc.rpc;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 public class JRpcFuture {
-
-    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     private Object object;
 
-    public void await(long timeout, TimeUnit unit) {
+    public synchronized void await(long timeout) {
         try {
-            countDownLatch.await(timeout, unit);
+            wait(timeout);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void countDown() {
-        countDownLatch.countDown();
+    public synchronized void wakeup() {
+        notify();
     }
 
     public Object getObject() {
