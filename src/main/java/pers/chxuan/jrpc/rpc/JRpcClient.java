@@ -6,7 +6,7 @@ import pers.chxuan.jrpc.entity.NetworkMessage;
 import pers.chxuan.jrpc.tcp.TcpClient;
 import pers.chxuan.jrpc.tcp.TcpConnectStatus;
 import pers.chxuan.jrpc.serialize.MessageSerialize;
-import pers.chxuan.jrpc.utils.NetworkMessageUtils;
+import pers.chxuan.jrpc.util.NetworkMessageUtils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

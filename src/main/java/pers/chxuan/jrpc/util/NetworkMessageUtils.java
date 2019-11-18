@@ -1,4 +1,4 @@
-package pers.chxuan.jrpc.utils;
+package pers.chxuan.jrpc.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
