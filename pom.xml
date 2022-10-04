@@ -14,7 +14,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netty.version>4.1.43.Final</netty.version>
-        <protobuf.version>2.5.0</protobuf.version>
+        <protobuf.version>3.16.3</protobuf.version>
         <jackson.version>2.10.0</jackson.version>
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.28</slf4j.version>
